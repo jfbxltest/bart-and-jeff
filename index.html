@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bart & Jeff</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Welcome from Bart & Jeff</h1>
+    <form id="form">
+        <div class="field">
+          <label for="inputDistance">Distance</label>
+          <input type="range" id="inputDistance" name="inputDistance" min="1" max="10" step="1">
+          <span for="inputDistance"></span>
+        </div>
+        <div class="field">
+          <label for="inputVitesse">Vitesse</label>
+          <input type="range" id="inputVitesse" name="inputVitesse">
+          <span for="inputVitesse"></span>
+        </div>
+        <div class="field">
+          <label for="inputPrecision">Precisson</label>
+          <input type="range" id="inputPrecision" name="inputPrecision" min="1" max="10" step="1">
+          <span for="inputPrecision"></span>
+        </div>
+
+    </form>
+
+    <svg viewBox="-100 -100 200 200" xmlns="http://www.w3.org/2000/svg" >
+      <line x1="0" y1="-100" x2="0" y2="100" style="stroke:red;stroke-width:0.5" />
+      <line x1="-100" y1="0" x2="100" y2="0" style="stroke:red;stroke-width:0.5" />
+      
+      <polyline id="graph" style="fill:none;stroke:green;stroke-width:1"></polyline>
+    </svg>
+  </div>
+  <script src="script.js"></script>
+  <script>
+    const defaultValues = {
+      inputVitesse: { min: 10, max:120, step:10, value:50},
+      inputDistance: { min: 50, max:600, step:10, value:100},
+      inputPrecision: { min: 1, max:10, step:1, value:2},
+    }
+    
+    const setupCtrl = (elem, setup) => {
+      for (const [key, value] of Object.entries(setup)) {
+        elem.setAttribute(key, value)
+      }
+    }
+    
+    const getValues = () => {
+      return { 
+        v: +this.inputVitesse.value,
+        d: +this.inputDistance.value,
+        p: +this.inputPrecision.value,
+      }
+    }
+    const changeHandler = (elemId, value) => {
+      //update UI
+      document.querySelector(`span[for="${elemId}"]`).innerText = value
+      const {v,d,p} = getValues()
+      drawVariationIntoPolyline(this.graph, v, d, p)
+    
+    }
+
+    // initialisation
+    (function() {
+
+      for (const [key, value] of Object.entries(defaultValues)) {
+        setupCtrl(this[key], value)
+        document.querySelector(`span[for="${key}"]`).innerText = this[key].value
+      }
+      const {v,d,p} = getValues()
+      drawVariationIntoPolyline(this.graph, v, d, p)
+      
+      this.form.addEventListener('change', (e)=> changeHandler(e.target.id, e.target.value))
+    })()
+    
+
+   
+  </script>
+</body>
+
+</html>
