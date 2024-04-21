@@ -21,10 +21,16 @@ form {
 }
 
 form>.field {
-  padding-bottom: 0.25rem;
-  display: flex;
-  justify-content: space-between;
+  padding-bottom: 1rem;
+ 
 }
 svg {
   background-color: #2f2f2f;
 }
+@media (min-width: 660px) {
+  form>.field {
+    padding-bottom: 0.25rem;
+    display: flex;
+    justify-content: space-between;
+  }
+   }
