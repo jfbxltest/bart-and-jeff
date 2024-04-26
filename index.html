@@ -1,101 +1,112 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bart & Jeff</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <div class="container">
-    <h1>Welcome from Bart & Jeff</h1>
-    <form id="form">
-        <div class="field">
-          <label for="inputDistance">Distance</label>
-          <input type="range" id="inputDistance" name="inputDistance">
-          <span for="inputDistance"></span>
-        </div>
-        <div class="field">
-          <label for="inputVitesse">Vitesse</label>
-          <input type="range" id="inputVitesse" name="inputVitesse">
-          <span for="inputVitesse"></span>
-        </div>
-        <div class="field">
-          <label for="inputPrecision">Precisson</label>
-          <input type="range" id="inputPrecision" name="inputPrecision">
-          <span for="inputPrecision"></span>
-        </div>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Bart & Jeff</title>
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+		<div class="container">
+			<h1>Welcome from Bart & Jeff</h1>
 
-    </form>
+			<form id="form">
+				<div class="field">
+					<label for="inputDistance">Distance</label>
+					<input type="range" id="inputDistance" name="inputDistance">
+					<span for="inputDistance"></span>
+				</div>
+				<div class="field">
+					<label for="inputVitesse">Vitesse</label>
+					<input type="range" id="inputVitesse" name="inputVitesse">
+					<span for="inputVitesse"></span>
+				</div>
+				<div class="field">
+					<label for="inputPrecision">Precisson</label>
+					<input type="range" id="inputPrecision" name="inputPrecision">
+					<span for="inputPrecision"></span>
+				</div>
 
-    <svg id="svg-id" viewBox="-100 -100 200 200" xmlns="http://www.w3.org/2000/svg" >
-      <line x1="0" y1="-100" x2="0" y2="100" style="stroke:red;stroke-width:0.5" />
-      <line x1="-100" y1="0" x2="100" y2="0" style="stroke:red;stroke-width:0.5" />
-      
-      <polyline id="polyline-id" style="fill:none;stroke:green;stroke-width:1"></polyline>
-    </svg>
-  </div>
-  <script src="./scripts/Graph.js"></script>
-  <script>
+			</form>
 
-    const defaultValues = {
-      inputVitesse: { min: 10, max:120, step:10, value:50},
-      inputDistance: { min: 50, max:600, step:10, value:100},
-      inputPrecision: { min: 1, max:10, step:1, value:2},
-    }
-    
-    const getValues = () => {
-      return { 
-        v: +this.inputVitesse.value,
-        d: +this.inputDistance.value,
-        p: +this.inputPrecision.value,
-      }
-    }
+			<svg id="svg-id" viewbox="-100 -100 200 200" xmlns="http://www.w3.org/2000/svg">
+				<line x1="0" y1="-100" x2="0" y2="100" style="stroke:red;stroke-width:0.5"/>
+				<line x1="-100" y1="0" x2="100" y2="0" style="stroke:red;stroke-width:0.5"/>
+
+				<polyline id="polyline-id" style="fill:none;stroke:green;stroke-width:1"></polyline>
+			</svg>
+		</div>
+		<script src="./scripts/Graph.js"></script>
+		<script src="./scripts/calculatrice.js"></script>
+		<script>
+
+			const defaultValues = {
+inputVitesse: {
+min: 10,
+max: 120,
+step: 10,
+value: 50
+},
+inputDistance: {
+min: 50,
+max: 600,
+step: 10,
+value: 100
+},
+inputPrecision: {
+min: 1,
+max: 10,
+step: 1,
+value: 2
+}
+}
+
+const getValues = () => {
+return {
+v: + this.inputVitesse.value,
+d: + this.inputDistance.value,
+p: + this.inputPrecision.value
+}
+}
 
 
-    
+// initialisation
+(function () {
 
-    // initialisation
-    (function() {
+const formula = ({d, v}) => (x) => (2 * (d / v)) / (1 - x / 100 * x / 100);
 
-			const formula = ({ d, v }) => (x) => (2 * (d / v)) / (1 - x/100 * x/100);
+const graph = new Graph(formula);
 
-			const graph = new Graph(formula);
-			
-			const {x, width} = document.getElementById('svg-id').viewBox.baseVal
-			graph.setMinMax(x, x + width)
+const {x, width} = document.getElementById('svg-id').viewBox.baseVal
+graph.setMinMax(x, x + width)
 
-			function draw() {
-				const polyline = document.getElementById('polyline-id')
-				const {v,d,p} = getValues();
-				graph.drawIntoPolyline(polyline, p, { v, d });
-			}
+function draw() {
+const polyline = document.getElementById('polyline-id')
+const {v, d, p} = getValues();
+graph.drawIntoPolyline(polyline, p, {v, d});
+}
 
-			const setupCtrl = (elem, setup) => {
-				for (const [key, value] of Object.entries(setup)) {
-					elem.setAttribute(key, value)
-				}
-			
-			}
-			const changeHandler = (elemId, value) => {
-				//update UI
-				document.querySelector(`span[for="${elemId}"]`).innerText = value;
-				draw();
-			}
+const setupCtrl = (elem, setup) => {
+for (const [key, value] of Object.entries(setup)) {
+elem.setAttribute(key, value)
+}
 
-      for (const [key, value] of Object.entries(defaultValues)) {
-        setupCtrl(this[key], value);
-        document.querySelector(`span[for="${key}"]`).innerText = this[key].value;
-      }
-      
-      draw();
+}
+const changeHandler = (elemId, value) => { // update UI
+document.querySelector(`span[for="${elemId}"]`).innerText = value;
+draw();
+}
 
-      this.form.addEventListener('input', (e)=> changeHandler(e.target.id, e.target.value));
-    })()
-    
+for (const [key, value] of Object.entries(defaultValues)) {
+setupCtrl(this[key], value);
+document.querySelector(`span[for="${key}"]`).innerText = this[key].value;
+}
 
-   
-  </script>
-</body>
+draw();
+
+this.form.addEventListener('input', (e) => changeHandler(e.target.id, e.target.value));
+})()
+		</script>
+	</body>
 
 </html>
