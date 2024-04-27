@@ -12,6 +12,14 @@ const op = [
   },
 ];
 
+function getFunctionMath(p) {
+  let name = "";
+  while (p && p[0] !== "(") {
+    name += p.shift();
+  }
+  return [Math[name], getValue(p)];
+}
+
 function getValue(p) {
   let value = 0;
 
@@ -24,8 +32,13 @@ function getValue(p) {
   if (p[0] == "(") {
     p.shift();
     value = getExpr(p);
-    p.shift();
+    p.shift(); // remove ")"
     return value;
+  }
+
+  if (p[0] == "$") {
+    p.shift();
+    return getFunctionMath(p);
   }
 
   while (!isNaN(p[0])) {
@@ -74,6 +87,12 @@ function calcuExpression(phrase) {
   console.log(factorize(phrase.split(""), 2));
   return solve(factorize(phrase.split(""), 2));
 }
+
+//function:
+// On utilise $ pour designer une fonction Math
+// une fonction est désigner par ce qui a entre "$"" et "("
+// le nom de la function correspondra à une function dans Math (p.e Math.sin)
+// On utilise £ pour designer une fonction personnalisée
 
 /* OLD - FIRST
 const getFact = (p) => {
