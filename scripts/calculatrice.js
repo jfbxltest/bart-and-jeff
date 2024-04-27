@@ -1,21 +1,31 @@
-const op = [
+const operations = (get) => [
   {
-    ["^"]: (a, b) => Math.pow(a, b),
+    ["^"]: (a, b) => Math.pow(get(a), get(b)),
   },
   {
-    ["*"]: (a, b) => a * b,
-    ["/"]: (a, b) => a / b,
+    ["*"]: (a, b) => get(a) * get(b),
+    ["/"]: (a, b) => get(a) / get(b),
   },
   {
-    ["+"]: (a, b) => a + b,
-    ["-"]: (a, b) => a - b,
+    ["+"]: (a, b) => get(a) + get(b),
+    ["-"]: (a, b) => get(a) - get(b),
   },
 ];
+
+const registre = (variables) => (v) => variables[v] ?? v;
+
+const op = operations(
+  registre({
+    a: 1,
+    b: 2,
+    c: 3,
+  })
+);
 
 function getValue(p) {
   let value = 0;
   let sign = 1;
-  console.log("get value ******");
+
   if (p[0] == "-") {
     p.shift();
     sign = -1;
@@ -52,7 +62,6 @@ function getValue(p) {
 function factorize(p, n) {
   let expr = [null, null, null];
   expr[1] = n > 0 ? factorize(p, n - 1) : getValue(p);
-  // console.log("oprateur ", p, n);
   if (op[n][p[0]]) {
     expr[0] = op[n][p.shift()];
     expr[2] = factorize(p, n);
