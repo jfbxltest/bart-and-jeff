@@ -4,6 +4,7 @@
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Calculatrice</title>
+		<link rel="stylesheet" href="style.css">
 	</head>
 	<body>
 		<div class="container">
@@ -11,19 +12,12 @@
 
 			<form id="form">
 				<div class="field">
-					<label for="inputDistance">Distance</label>
-					<input type="range" id="inputDistance" name="inputDistance">
-					<span for="inputDistance"></span>
+					<label for="input-calculatrice">Calculatrice</label>
+					<input type="text" id="input-calculatrice" name="input-calculatrice" autocomplete="off">
+					<button id="button-action">action</button>
 				</div>
 				<div class="field">
-					<label for="inputVitesse">Vitesse</label>
-					<input type="range" id="inputVitesse" name="inputVitesse">
-					<span for="inputVitesse"></span>
-				</div>
-				<div class="field">
-					<label for="inputPrecision">Precisson</label>
-					<input type="range" id="inputPrecision" name="inputPrecision">
-					<span for="inputPrecision"></span>
+					<span id="output-resultat">Resultat</span>
 				</div>
 
 			</form>
@@ -31,5 +25,19 @@
 
 		</div>
 		<script src="./scripts/calculatrice.js"></script>
+		<script>
+			const calculatrice = document.getElementById('input-calculatrice')
+const output = document.getElementById('output-resultat')
+const action = document.getElementById('button-action')
+
+action.addEventListener('click', (e) => {
+e.preventDefault()
+
+let phrase = calculatrice.value.replaceAll(' ', '').split('')
+
+console.log(factorize(phrase, 2))
+output.innerText = calculatrice.value
+})
+		</script>
 	</body>
 </html>

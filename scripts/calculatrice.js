@@ -28,10 +28,14 @@ function getValue(p) {
     //universel unary minus operator
     return [op["*"], -1, getValue];
   }
+  if (p[0] == "+") {
+    p.shift();
+    //maybe a error ??? !!!!
+  }
 
   if (p[0] == "(") {
     p.shift();
-    value = getExpr(p);
+    value = factorize(p, 2);
     p.shift(); // remove ")"
     return value;
   }
