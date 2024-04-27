@@ -4,6 +4,8 @@
 body {
   background: whitesmoke;
   height: 100vh;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: purple;
 }
 h1 {
   padding: 1rem;
@@ -13,6 +15,7 @@ h1 {
 }
 .container {
   background-color: pink;
+  padding: 1rem;
 }
 form {
   padding: 2rem;

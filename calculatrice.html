@@ -9,6 +9,23 @@
 	<body>
 		<div class="container">
 			<h1>Welcome from Bart & Jeff</h1>
+			<nav>
+				<a href="./graph.html">Le graphique</a>
+				<a href="./calculatrice.html">Le calculatrice</a>
+			</nav>
+
+			<h2>
+				Créateur de formule en développement.
+			</h2>
+			<p>
+				Voici une calculatrice pour les test. 😃
+				<br>
+				Les 4 operations sont prises en charge 😇
+				<br>
+				les fonctions de la bibliotheque Math sont prises en charge par un préfixe "$" 🥰
+				<br><i>
+					exemple: $sin(x) pour Math.sin(x)</i>
+			</p>
 
 			<form id="form">
 				<div class="field">
@@ -33,10 +50,7 @@ const action = document.getElementById('button-action')
 action.addEventListener('click', (e) => {
 e.preventDefault()
 
-let phrase = calculatrice.value.replaceAll(' ', '').split('')
-
-console.log(factorize(phrase, 2))
-output.innerText = calculatrice.value
+output.innerText = calcuExpression(calculatrice.value)
 })
 		</script>
 	</body>

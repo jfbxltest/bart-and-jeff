@@ -81,15 +81,26 @@ function factorize(p, n) {
  *  USAGE
  */
 function calcuExpression(phrase) {
-  solve = (exp) => {
-    if (exp.length) {
+  const solve = (exp) => {
+    if (exp.length === 3) {
       return exp[0](solve(exp[1]), solve(exp[2]));
+    }
+    if (exp.length === 2) {
+      return exp[0](solve(exp[1]));
     }
     return exp;
   };
 
-  console.log(factorize(phrase.split(""), 2));
-  return solve(factorize(phrase.split(""), 2));
+  if (typeof phrase === "string") {
+    phrase = phrase.replaceAll(" ", "").split("");
+    console.log(phrase);
+    const factors = factorize(phrase, 2);
+    console.log(factors);
+    return solve(factors);
+  }
+
+  console.log(phrase);
+  return "Opps, see at console";
 }
 
 //function:
