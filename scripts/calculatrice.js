@@ -1,106 +1,126 @@
 const op = [
-  {
-    ["^"]: (a, b) => Math.pow(a, b),
-  },
-  {
-    ["*"]: (a, b) => a * b,
-    ["/"]: (a, b) => a / b,
-  },
-  {
-    ["+"]: (a, b) => a + b,
-    ["-"]: (a, b) => a - b,
-  },
+	{
+		["^"]: (a, b) => Math.pow(a, b),
+	},
+	{
+		[":"]: (a, b) => a / b,
+	},
+	{
+		["*"]: (a, b) => a * b,
+		["/"]: (a, b) => a / b,
+	},
+	{
+		["+"]: (a, b) => a + b,
+		["-"]: (a, b) => a - b,
+	},
 ];
 
 function getFunctionMath(p) {
-  let name = "";
-  while (p && p[0] !== "(") {
-    name += p.shift();
-  }
-  return [Math[name], getValue(p)];
+	let name = "";
+	while (p && p[0] !== "(") {
+		name += p.shift();
+	}
+	return [Math[name], getValue(p)];
 }
 
 function getValue(p) {
-  let value = 0;
+	let value = 0;
 
-  if (p[0] == "-") {
-    p.shift();
-    //universel unary minus operator
-    return [op["*"], -1, getValue];
-  }
-  if (p[0] == "+") {
-    p.shift();
-    //maybe a error ??? !!!!
-  }
+	if (p[0] == "-") {
+		p.shift();
+		//universel unary minus operator
+		return [op["*"], -1, getValue];
+	}
+	if (p[0] == "+") {
+		p.shift();
+		//maybe a error ??? !!!!
+	}
 
-  if (p[0] == "(") {
-    p.shift();
-    value = factorize(p, 2);
-    p.shift(); // remove ")"
-    return value;
-  }
+	if (p[0] == "(") {
+		p.shift();
+		value = factorize(p, 3);
+		p.shift(); // remove ")"
+		return value;
+	}
 
-  if (p[0] == "$") {
-    p.shift();
-    return getFunctionMath(p);
-  }
+	if (p[0] == "$") {
+		p.shift();
+		return getFunctionMath(p);
+	}
 
-  while (!isNaN(p[0])) {
-    value *= 10;
-    value += +p.shift();
-  }
+	while (!isNaN(p[0])) {
+		value *= 10;
+		value += +p.shift();
+	}
 
-  if (p[0] == ".") {
-    p.shift();
-    let rang = 0;
-    let decimale = 0;
+	if (p[0] == ".") {
+		p.shift();
+		let rang = 0;
+		let decimale = 0;
 
-    while (!isNaN(p[0])) {
-      rang++;
-      decimale *= 10;
-      decimale += +p.shift();
-    }
-    value + decimale / Math.pow(10, rang);
-  }
+		while (!isNaN(p[0])) {
+			rang++;
+			decimale *= 10;
+			decimale += +p.shift();
+		}
+		console.log("on decimale", decimale, rang);
+		value += decimale / Math.pow(10, rang);
+	}
 
-  return value;
+	return value;
 }
 
 function factorize(p, n) {
-  let expr = [null, null, null];
-  expr[1] = n > 0 ? factorize(p, n - 1) : getValue(p);
-  if (op[n][p[0]]) {
-    expr[0] = op[n][p.shift()];
-    expr[2] = factorize(p, n);
-    return expr;
-  }
-  return expr[1];
+	let expr = [null, null, null];
+	expr[1] = n > 0 ? factorize(p, n - 1) : getValue(p);
+	if (op[n][p[0]]) {
+		expr[0] = op[n][p.shift()];
+		expr[2] = factorize(p, n);
+		return expr;
+	}
+	return expr[1];
+}
+
+function controlBrackets(phrase) {
+	let brackets = 0;
+	phrase.split("").forEach((c) => {
+		if (c === "(") {
+			brackets++;
+		} else if (c === ")") {
+			if (brackets < 1) {
+				return false;
+			}
+			brackets--;
+		}
+	});
+	return brackets === 0;
 }
 
 /**
  *  USAGE
  */
 function calcuExpression(phrase) {
-  const solve = (exp) => {
-    if (exp.length === 3) {
-      return exp[0](solve(exp[1]), solve(exp[2]));
-    }
-    if (exp.length === 2) {
-      return exp[0](solve(exp[1]));
-    }
-    return exp;
-  };
+	const solve = (exp) => {
+		if (exp.length === 3) {
+			console.log(exp);
+			return exp[0](solve(exp[1]), solve(exp[2]));
+		}
+		if (exp.length === 2) {
+			return exp[0](solve(exp[1]));
+		}
+		return exp;
+	};
 
-  if (typeof phrase === "string") {
-    phrase = phrase.replaceAll(" ", "").split("");
-    console.log(phrase);
-    const factors = factorize(phrase, 2);
-    console.log(factors);
-    return solve(factors);
-  }
+	if (typeof phrase === "string") {
+		phrase = phrase.replaceAll(" ", "").split("");
+		// console.log(phrase);
+		const factors = factorize(phrase, 3);
+		// console.log(factors);
+		return solve(factors);
+	}
 
-  console.log(phrase);
-  return "Opps, see at console";
+	console.log(phrase);
+	return "Opps, see at console";
 }
 
 //function:
